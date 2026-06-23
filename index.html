@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中醫診療助手 — 中醫及傳統整復疑難雜症解答</title>
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1a4a3a;
+    --primary-light: #2d6b55;
+    --primary-dark: #0f2e24;
+    --accent: #c4956a;
+    --accent-light: #e8c9a6;
+    --bg: #f7f3ee;
+    --bg-card: #ffffff;
+    --text: #2c2c2c;
+    --text-light: #6b6b6b;
+    --border: #ddd6cc;
+    --success: #4a8c6f;
+    --warning: #c4956a;
+    --danger: #c0392b;
+    --info: #5b7e9e;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 12px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ===== Layout ===== */
+  .app-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ===== Header ===== */
+  header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius);
+    margin-bottom: 28px;
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  header h1 .icon { font-size: 1.8rem; }
+  header p {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+  header .badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+  header .credit {
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* ===== Search Box ===== */
+  .search-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .search-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-size: 0.95rem;
+  }
+  .search-row {
+    display: flex;
+    gap: 10px;
+  }
+  .search-row input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .search-row input:focus {
+    border-color: var(--primary-light);
+    background: #fff;
+  }
+  .search-row input::placeholder {
+    color: var(--text-light);
+    opacity: 0.6;
+  }
+  .search-row button {
+    padding: 12px 28px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .search-row button:hover { background: var(--primary-light); }
+  .search-row button:active { transform: scale(0.97); }
+
+  .search-tips {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .search-tips .tag {
+    padding: 4px 12px;
+    border-radius: 16px;
+    background: var(--accent-light);
+    color: var(--primary-dark);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .search-tips .tag:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ===== Condition List ===== */
+  .condition-list-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .condition-list-section h2 {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 14px;
+  }
+  .condition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .condition-grid .item {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+  }
+  .condition-grid .item:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+  }
+
+  /* ===== Result Card ===== */
+  .result-card {
+    display: none;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .result-card.active { display: block; }
+  .result-card .match-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--success);
+    color: #fff;
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+  }
+
+  /* Sections inside result */
+  .result-section {
+    margin-top: 28px;
+  }
+  .result-section:first-of-type { margin-top: 0; }
+  .result-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: var(--primary);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent-light);
+    margin-bottom: 14px;
+  }
+  .result-section p, .result-section li {
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* Pattern Table */
+  .pattern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.9rem;
+  }
+  .pattern-table th {
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .pattern-table th:first-child { border-radius: 6px 0 0 0; }
+  .pattern-table th:last-child { border-radius: 0 6px 0 0; }
+  .pattern-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pattern-table tr:nth-child(even) { background: #faf8f5; }
+  .pattern-table tr:hover { background: var(--accent-light); }
+
+  /* Acupoint list */
+  .acupoint-item {
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-left: 3px solid var(--success);
+    background: #f8fbf9;
+    border-radius: 0 8px 8px 0;
+  }
+  .acupoint-item strong { color: var(--primary); }
+  .acupoint-item .meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  /* Osteopathy list */
+  .osteo-item {
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-left: 3px solid var(--info);
+    background: #f5f8fa;
+    border-radius: 0 8px 8px 0;
+  }
+  .osteo-item strong { color: var(--info); }
+
+  /* Diet list */
+  .diet-item {
+    padding: 12px 16px;
+    margin: 6px 0;
+    border-left: 3px solid var(--accent);
+    background: #fdf9f5;
+    border-radius: 0 8px 8px 0;
+  }
+  .diet-item strong { color: var(--accent); }
+  .diet-item .meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+
+  /* Lifestyle */
+  .lifestyle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 600px) { .lifestyle-grid { grid-template-columns: 1fr; } }
+  .lifestyle-do, .lifestyle-dont {
+    padding: 14px;
+    border-radius: 8px;
+  }
+  .lifestyle-do {
+    background: #eaf5ee;
+    border: 1px solid #c8e0d3;
+  }
+  .lifestyle-dont {
+    background: #fceeec;
+    border: 1px solid #f0d4d0;
+  }
+  .lifestyle-do h4, .lifestyle-dont h4 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .lifestyle-do ul, .lifestyle-dont ul {
+    list-style: none;
+    padding: 0;
+  }
+  .lifestyle-do ul li::before { content: "✅ "; }
+  .lifestyle-dont ul li::before { content: "❌ "; }
+  .lifestyle-do ul li, .lifestyle-dont ul li {
+    font-size: 0.85rem;
+    padding: 3px 0;
+  }
+
+  /* See Doctor */
+  .see-doctor {
+    background: #fff8e6;
+    border: 1px solid #f0e0b8;
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .see-doctor ul {
+    list-style: none;
+    padding: 0;
+  }
+  .see-doctor ul li::before { content: "⚠️ "; }
+  .see-doctor ul li {
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+
+  /* ===== Disclaimer ===== */
+  .disclaimer {
+    background: #fff8e6;
+    border-left: 4px solid var(--warning);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: #7a6a3a;
+  }
+  .disclaimer strong { color: var(--danger); }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+    font-size: 0.8rem;
+  }
+  footer a { color: var(--primary); text-decoration: none; }
+
+  /* ===== Loading ===== */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+  }
+  .loading.active { display: block; }
+  .spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== Empty State ===== */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+  }
+  .empty-state.active { display: block; }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 10px; }
+
+  /* ===== Multiple Results ===== */
+  .result-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .result-tabs .tab {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .result-tabs .tab:hover { border-color: var(--primary-light); }
+  .result-tabs .tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ===== Print ===== */
+  @media print {
+    .search-section, .condition-list-section, .result-tabs, footer { display: none; }
+    .result-card { box-shadow: none; padding: 0; }
+    header { background: var(--primary) !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- Header -->
+  <header>
+    <h1><span class="icon">🏥</span> 中醫診療助手</h1>
+    <p>中醫及傳統整復 — 疑難雜症智慧解答</p>
+    <span class="badge">🌿 辨證論治 · 經絡穴位 · 整復保健 · 藥膳食療</span>
+    <span class="credit">製作程式：國祥</span>
+  </header>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <label for="symptom-input">🔍 請輸入您的症狀或不舒服的部位</label>
+    <div class="search-row">
+      <input type="text" id="symptom-input" placeholder="例如：頭痛、肩頸酸痛、失眠、腰酸背痛…" />
+      <button onclick="handleSearch()">查詢</button>
+    </div>
+    <div class="search-tips" id="search-tips"></div>
+  </div>
+
+  <!-- Condition List -->
+  <div class="condition-list-section" id="condition-list-section">
+    <h2>📋 可查詢的常見症狀</h2>
+    <div class="condition-grid" id="condition-grid"></div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="margin-top:10px;">正在分析您的症狀…</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="empty-state">
+    <div class="icon">🤔</div>
+    <p>目前知識庫中未有完全匹配的症狀</p>
+    <p style="font-size:0.85rem;margin-top:6px;">請嘗試更具體的關鍵詞，例如：頭痛、肩頸酸痛、腰酸背痛、膝蓋痛、失眠</p>
+  </div>
+
+  <!-- Result Area -->
+  <div id="result-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <p>⚕️ 本工具僅供保健參考，不構成醫療診斷或處方。如有持續不適，請諮詢專業醫師。</p>
+    <p style="margin-top:4px;">中醫診療助手 v1.0 &copy; 2026</p>
+  </footer>
+
+</div>
+
+<script>
+// ============================================================
+// 中醫知識庫（與 Python CLI 同步）
+// ============================================================
+const TCM_KNOWLEDGE_BASE = [
+  {
+    condition: "頭痛（肝陽上亢型）",
+    keywords: ["頭痛", "偏頭痛", "太陽穴", "頭脹", "頭暈", "血壓高"],
+    analysis: "肝陽上亢型頭痛多因情志不遂、肝鬱化火，或肝腎陰虛、陰不制陽，導致肝陽上擾清竅。常見於工作壓力大、熬夜、易怒人群。",
+    patterns: [
+      ["肝陽上亢", "頭脹痛、眩暈耳鳴、面紅目赤、心煩易怒", "舌紅苔黃、脈弦數"],
+      ["肝腎陰虛", "頭痛綿綿、眩暈耳鳴、腰膝酸軟、五心煩熱", "舌紅少苔、脈細數"],
+      ["瘀血阻絡", "頭痛如刺、痛有定處、夜間加重、久病不癒", "舌紫暗有瘀斑、脈澀"],
+    ],
+    acupoints: [
+      { name: "太衝穴", loc: "足背第一、二蹠骨結合部前方凹陷中", method: "拇指按壓，用力向下，每次3分鐘，雙腳交替", effect: "疏肝降逆，平肝潛陽" },
+      { name: "風池穴", loc: "後頸部，枕骨下方凹陷處", method: "雙手拇指按揉，由輕漸重，每次2分鐘", effect: "祛風通絡，清頭明目" },
+      { name: "太陽穴", loc: "眉梢與外眼角之間向後一橫指凹陷", method: "食指中指並攏按揉，順時針畫圈，每次1分鐘", effect: "疏風散熱，通絡止痛" },
+      { name: "百會穴", loc: "頭頂正中線與兩耳尖連線交點", method: "食指輕按，順時針輕揉30次", effect: "昇陽舉陷，醒腦開竅" },
+    ],
+    osteopathy: [
+      { name: "頸部放鬆拉伸", steps: "坐姿，緩慢將頭轉向左側至極限，停留15秒；換右側。每側3次", benefit: "放鬆頸部肌肉，改善頭部供血" },
+      { name: "肩胛提肌鬆解", steps: "左手搭右肩，頭向左側倒，右手放頭頂輕加壓力，停留20秒後換邊", benefit: "鬆解頸肩部筋膜張力" },
+    ],
+    diet: [
+      { name: "菊花決明子茶", desc: "菊花5g、決明子10g、枸杞5g，沸水沖泡", time: "適合肝陽上亢、目赤頭痛者" },
+      { name: "天麻魚頭湯", desc: "天麻15g、川芎6g、鰱魚頭1個、生薑3片，燉煮1小時", time: "平肝熄風，適合頭暈頭痛" },
+    ],
+    lifestyle_do: ["保持規律作息，晚上11點前入睡", "每天冥想或腹式呼吸10分鐘", "適當有氧運動如快走、太極"],
+    lifestyle_dont: ["避免熬夜、過度勞累", "少吃辛辣刺激食物", "避免暴怒、情緒劇烈波動"],
+    see_doctor: ["頭痛劇烈且突然發作", "伴隨意識模糊、肢體無力或口齒不清", "每週頭痛超過2次且持續數週"],
+  },
+  {
+    condition: "頭痛（氣血虛弱型）",
+    keywords: ["頭痛", "頭暈", "疲倦", "勞累", "臉色白", "貧血", "心悸"],
+    analysis: "氣血虛弱型頭痛多因脾胃運化失常，氣血生化不足，或久病失養，導致清陽不升、腦失所養。常見於體質虛弱、月經過多、腸胃功能差者。",
+    patterns: [
+      ["氣血兩虛", "頭痛綿綿、勞累加重、面色蒼白、心悸氣短", "舌淡苔薄白、脈細弱"],
+      ["脾胃虛弱", "頭暈乏力、食慾不振、大便稀溏、飯後腹脹", "舌淡胖有齒痕、脈濡緩"],
+      ["心脾兩虛", "頭痛暈眩、心悸失眠、健忘多夢", "舌淡嫩、脈細無力"],
+    ],
+    acupoints: [
+      { name: "足三里穴", loc: "膝蓋外側凹陷下四指寬處", method: "拇指按揉，順時針60次，逆時針60次，雙腿交替", effect: "健脾益氣，補氣養血" },
+      { name: "血海穴", loc: "膝蓋內側上方2寸", method: "拇指按壓，酸脹感為度，每次2分鐘", effect: "養血活血，調和氣血" },
+      { name: "百會穴", loc: "頭頂正中", method: "食指輕按溫灸感，順時針輕揉30次", effect: "昇陽舉陷，補氣昇清" },
+      { name: "氣海穴", loc: "肚臍正下方1.5寸", method: "手掌搓熱後順時針按揉3分鐘", effect: "補氣培元" },
+    ],
+    osteopathy: [
+      { name: "胸椎伸展", steps: "靠牆站立，胸椎貼牆，雙手向上舉，吸氣展開胸腔，呼氣放鬆", benefit: "改善胸廓活動度，促進氣血運行" },
+      { name: "肩胛骨內收", steps: "坐姿，雙肩向後繞圈，肩胛骨向脊椎靠攏，每組10次", benefit: "打開胸腔，改善上背部循環" },
+    ],
+    diet: [
+      { name: "當歸黃耆雞湯", desc: "當歸10g、黃耆30g、紅棗5顆、雞腿1隻，燉煮1.5小時", time: "補氣養血，每週2次" },
+      { name: "桂圓紅棗茶", desc: "桂圓肉15g、紅棗5顆、枸杞10g，沸水沖泡", time: "安神養血，適合下午飲用" },
+      { name: "四神湯", desc: "山藥、蓮子、茯苓、芡實各15g，加排骨燉煮", time: "健脾益氣，增強吸收" },
+    ],
+    lifestyle_do: ["三餐定時定量，細嚼慢嚥", "適度運動如散步、瑜伽", "睡前熱水泡腳15分鐘"],
+    lifestyle_dont: ["避免過度節食或偏食", "少吃生冷食物", "避免熬夜耗傷氣血"],
+    see_doctor: ["長期疲勞伴隨體重下降", "甲床、眼瞼蒼白持續未改善", "頭暈至無法站立"],
+  },
+  {
+    condition: "肩頸酸痛",
+    keywords: ["肩頸", "脖子", "肩膀", "僵硬", "落枕", "電腦", "久坐", "手機"],
+    analysis: "肩頸酸痛多因長期姿勢不良（低頭滑手機、電腦前久坐）導致經筋勞損、氣血不通。足太陽膀胱經、手少陽三焦經、督脈循行受阻，不通則痛。寒邪入侵、睡姿不當亦為常見誘因。",
+    patterns: [
+      ["寒濕阻絡", "頸項僵硬、轉側不利、遇寒加重、得熱痛減", "舌苔白膩、脈弦緊"],
+      ["氣滯血瘀", "肩背刺痛固定、活動受限、按壓痛點明顯", "舌紫暗或有瘀斑、脈澀"],
+      ["肝腎不足", "頸肩酸痛反覆、伴頭暈耳鳴、腰膝無力", "舌淡紅、脈沉細"],
+    ],
+    acupoints: [
+      { name: "肩井穴", loc: "肩膀上，大椎穴與肩峰連線中點", method: "拇指按壓，由輕漸重，配合緩緩轉頭，每側1分鐘", effect: "活血通絡，緩解肩頸僵硬" },
+      { name: "風池穴", loc: "後頸枕骨下方凹陷處", method: "雙手拇指按揉，力度以酸脹為度，每次2分鐘", effect: "祛風散寒，舒筋活絡" },
+      { name: "大椎穴", loc: "第七頸椎棘突下凹陷中（低頭時最突出骨頭下方）", method: "食指中指併攏按揉，或熱敷5分鐘", effect: "疏風散寒，通陽解表" },
+      { name: "後谿穴", loc: "握拳，小指掌指關節後橫紋頭凹陷處", method: "拇指尖按壓，配合脖子緩慢轉動，每次1分鐘", effect: "通督脈，止頸項痛" },
+    ],
+    osteopathy: [
+      { name: "頸椎自我牽引", steps: "坐姿，雙手抱頭後側，頭部緩慢向上延伸，保持5秒後放鬆，做8次", benefit: "拉開頸椎間隙，減輕神經壓迫" },
+      { name: "米字操", steps: "頭部緩慢寫「米」字，動作放慢，每個方向到極限停留3秒", benefit: "活動頸椎各方向活動度" },
+      { name: "牆角開胸", steps: "面對牆角，雙手各扶一牆，身體前傾，感受胸廓拉伸，停留30秒", benefit: "矯正圓肩駝背，打開胸廓" },
+    ],
+    diet: [
+      { name: "葛根川芎茶", desc: "葛根15g、川芎6g、桂枝3g，沸水沖泡", time: "解肌舒筋，專治項背僵硬" },
+      { name: "生薑紅糖水", desc: "生薑5片、紅糖適量，煮沸5分鐘", time: "驅寒活血，適合風寒型肩頸痛" },
+    ],
+    lifestyle_do: ["每30分鐘起身活動5分鐘", "枕頭高度適中（仰臥一拳高，側臥一肩高）", "每天做頸部拉伸操"],
+    lifestyle_dont: ["避免長時間低頭滑手機", "避免頸部受風寒（冷氣直吹）", "避免猛然轉頭或甩頭"],
+    see_doctor: ["手臂或手指麻木無力", "頭暈伴隨噁心嘔吐", "落枕一週未改善"],
+  },
+  {
+    condition: "五十肩（冰凍肩）",
+    keywords: ["五十肩", "冰凍肩", "肩膀舉不起", "肩膀痛", "肩關節", "手臂活動受限", "沾黏"],
+    analysis: "五十肩又稱冰凍肩，好發於50歲前後，因肩關節囊發炎沾黏導致活動受限。中醫歸屬「痺症」範疇，多因肝腎虧虛、筋失濡養，復感風寒濕邪所致。",
+    patterns: [
+      ["風寒濕痺", "肩部沉重冷痛、遇寒加重、活動不利", "舌苔白滑、脈弦緊"],
+      ["氣滯血瘀", "肩部刺痛固定、夜間尤甚、活動受限明顯", "舌紫暗有瘀點、脈澀"],
+      ["肝腎虧虛", "肩部酸痛無力、勞累加重、伴腰膝酸軟", "舌淡紅少苔、脈沉細"],
+    ],
+    acupoints: [
+      { name: "肩髃穴", loc: "肩峰前下方，舉臂時凹陷處", method: "拇指按壓，配合肩關節緩慢活動，每次2分鐘", effect: "通絡止痛，利關節" },
+      { name: "肩髎穴", loc: "肩峰後下方凹陷中", method: "拇指深按，酸脹為度，每次1分鐘", effect: "活血通絡" },
+      { name: "臂臑穴", loc: "上臂外側，三角肌止點處", method: "拇指按揉，由上往下3分鐘", effect: "舒筋活絡" },
+      { name: "合谷穴", loc: "手背虎口處，第一、二掌骨間", method: "拇指按壓至酸脹，每次1分鐘", effect: "行氣止痛，通絡" },
+    ],
+    osteopathy: [
+      { name: "鐘擺運動", steps: "上半身前傾，患側手臂自然下垂，利用身體帶動手臂畫圈，順逆時針各10圈", benefit: "鬆動肩關節，不用力主動收縮" },
+      { name: "爬牆運動", steps: "面對牆壁，患側手指沿牆面慢慢向上爬，爬到極限後標記，每天嘗試更高", benefit: "恢復肩關節前屈活動度" },
+      { name: "毛巾牽拉", steps: "雙手背後各抓毛巾兩端，健側向上拉患側，停留15秒，做5次", benefit: "改善內旋與後伸活動度" },
+    ],
+    diet: [
+      { name: "杜仲豬尾湯", desc: "杜仲20g、續斷15g、豬尾骨1條、生薑3片，燉煮2小時", time: "補肝腎、強筋骨" },
+      { name: "當歸生薑羊肉湯", desc: "當歸15g、生薑30g、羊肉300g", time: "補血活血，驅寒通絡" },
+    ],
+    lifestyle_do: ["每天進行肩關節活動度訓練", "洗澡時用熱水沖患側肩部", "睡覺時患側朝上，避免受壓"],
+    lifestyle_dont: ["避免提重物或突然用力", "避免患側受寒", "不要因怕痛而完全不活動"],
+    see_doctor: ["活動度完全喪失（無法自行穿衣梳頭）", "保守治療3個月未改善", "夜間持續疼痛影響睡眠"],
+  },
+  {
+    condition: "腰酸背痛（腎虛型）",
+    keywords: ["腰酸", "腰痛", "背痛", "久坐", "彎腰", "腰痠", "腎", "腰部"],
+    analysis: "腰為腎之府。久坐傷肉、久立傷骨、房勞傷腎。腎虛腰痛最為常見，涉及足太陽膀胱經與督脈氣血運行不暢。",
+    patterns: [
+      ["腎陽虛", "腰膝酸軟冷痛、畏寒肢冷、夜尿頻多、精神不振", "舌淡胖苔白滑、脈沉遲"],
+      ["腎陰虛", "腰部酸軟隱痛、耳鳴眩暈、口乾咽燥、五心煩熱", "舌紅少苔、脈細數"],
+      ["寒濕阻絡", "腰部重著冷痛、轉側不利、陰雨天加重", "舌苔白膩、脈濡緩"],
+      ["瘀血腰痛", "腰痛如刺固定不移、日輕夜重、按壓痛甚", "舌紫暗有瘀斑、脈澀"],
+    ],
+    acupoints: [
+      { name: "腎俞穴", loc: "腰部第二腰椎棘突下旁開1.5寸", method: "雙手握拳以拳背按壓畫圓，每次3分鐘", effect: "補腎強腰，通絡止痛" },
+      { name: "委中穴", loc: "膝膕橫紋中點處", method: "拇指深按，配合輕輕伸膝，每次1分鐘", effect: "疏經通絡，活血止痛" },
+      { name: "腰陽關穴", loc: "第四腰椎棘突下凹陷中", method: "可用暖暖包熱敷取代按壓，每次5分鐘", effect: "溫陽散寒，強腰壯脊" },
+      { name: "大腸俞穴", loc: "第四腰椎棘突下旁開1.5寸", method: "雙手拇指按揉，順時針方向，各1分鐘", effect: "調理腸腑，緩解腰骶痛" },
+    ],
+    osteopathy: [
+      { name: "貓牛式", steps: "四足跪姿，吸氣抬頭塌腰，呼氣拱背低頭，各停留5秒，做10次", benefit: "活動脊椎，緩解腰背僵硬" },
+      { name: "嬰兒式", steps: "跪坐，上身向前趴，額頭貼地，雙臂向前伸展，停留30秒", benefit: "放鬆下背部肌肉" },
+      { name: "橋式", steps: "仰臥屈膝，臀部緩慢向上抬起，保持5秒後放下，做12次", benefit: "強化臀肌及下背核心" },
+    ],
+    diet: [
+      { name: "杜仲牛膝豬尾湯", desc: "杜仲20g、懷牛膝15g、豬尾骨1條、黑豆30g、生薑3片，燉煮2小時", time: "補肝腎、強筋骨，每週2-3次" },
+      { name: "核桃芝麻糊", desc: "核桃仁30g、黑芝麻30g、粳米50g，磨粉煮糊", time: "補腎益精，適合腎虛腰痛" },
+    ],
+    lifestyle_do: ["坐椅子時腰部放靠墊支撐", "每30分鐘起身活動後伸腰部", "睡硬板床或支撐性好的床墊"],
+    lifestyle_dont: ["避免彎腰搬重物（應蹲下再用腿力）", "避免久坐超過1小時不活動", "避免睡過軟沙發或床"],
+    see_doctor: ["腰痛伴隨腿部放射痛或麻木", "伴隨大小便失禁或排尿困難", "外傷後劇烈腰痛"],
+  },
+  {
+    condition: "坐骨神經痛",
+    keywords: ["坐骨神經", "屁股痛", "腿麻", "腳麻", "腰部放射", "臀部", "從腰到腳"],
+    analysis: "坐骨神經痛屬中醫「痺症」、「腰腿痛」範疇。多因腰椎間盤突出、梨狀肌緊繃或骨盆歪斜，壓迫足太陽膀胱經與足少陽膽經循行路線。",
+    patterns: [
+      ["寒濕阻絡", "腰腿冷痛重著、下肢拘急、遇寒加甚", "舌苔白膩、脈弦緊"],
+      ["氣滯血瘀", "腰腿刺痛固定、夜間加重、活動受限", "舌紫暗有瘀斑、脈澀"],
+      ["肝腎虧虛", "腰腿酸軟無力、勞累加重、反覆發作", "舌淡紅、脈沉細"],
+    ],
+    acupoints: [
+      { name: "環跳穴", loc: "臀部側面，股骨大轉子與骶管裂孔連線外中1/3", method: "肘尖按壓，深沉力度，每側2分鐘", effect: "通利腰腿，舒筋活絡" },
+      { name: "承扶穴", loc: "臀下橫紋中點", method: "拇指按壓至酸脹，每側1分鐘", effect: "通絡止痛" },
+      { name: "委中穴", loc: "膝膕橫紋中點", method: "拇指按壓配合輕伸膝", effect: "疏經通絡" },
+      { name: "陽陵泉穴", loc: "小腿外側，腓骨小頭前下方凹陷處", method: "拇指按揉，每次1分鐘", effect: "舒筋利節，通絡止痛" },
+    ],
+    osteopathy: [
+      { name: "梨狀肌拉伸", steps: "仰臥，患側腳跨到對側膝蓋外側，雙手抱膝向對側肩膀方向拉，停留20秒", benefit: "鬆解梨狀肌，減輕神經壓迫" },
+      { name: "貓牛式", steps: "四足跪姿交替拱背塌腰，配合呼吸，做10次", benefit: "活動腰椎，減輕椎間盤壓力" },
+      { name: "俯臥伸展", steps: "俯臥，雙手撐起上半身，停留10秒，做5次", benefit: "打開椎間隙，減輕神經壓迫" },
+    ],
+    diet: [
+      { name: "當歸生薑桂枝湯", desc: "當歸12g、生薑15g、桂枝6g、白芍12g，水煎服", time: "溫經散寒，活血通絡" },
+      { name: "牛膝續斷豬骨湯", desc: "懷牛膝15g、續斷15g、豬脊骨500g、紅棗5顆", time: "補肝腎、強筋骨" },
+    ],
+    lifestyle_do: ["避免久坐，每30分鐘起身走動", "坐時腰後放靠墊，雙腳平放", "睡硬板床"],
+    lifestyle_dont: ["避免提重物或彎腰搬東西", "避免坐太軟的沙發", "避免穿高跟鞋"],
+    see_doctor: ["大小便失禁或排尿困難", "腳下垂無力（無法翹腳尖）", "疼痛劇烈且持續加重"],
+  },
+  {
+    condition: "膝蓋痛",
+    keywords: ["膝蓋", "膝痛", "膝關節", "上下樓", "退化", "膝蓋無力", "關節"],
+    analysis: "膝為筋之府，肝主筋、腎主骨。膝蓋痛多因肝腎虧虛、筋骨失養，或外傷勞損、風寒濕邪侵襲。",
+    patterns: [
+      ["肝腎陰虛", "膝蓋酸痛無力、上下樓梯尤甚、伴耳鳴腰酸", "舌紅少苔、脈細數"],
+      ["寒濕痺阻", "膝關節冷痛腫脹、屈伸不利、遇寒加重", "舌苔白滑、脈弦緊"],
+      ["氣滯血瘀", "膝蓋刺痛固定、活動受限、外傷史", "舌紫暗、脈澀"],
+    ],
+    acupoints: [
+      { name: "犢鼻穴", loc: "膝蓋外側凹陷中（外膝眼）", method: "拇指按揉，配合膝蓋小幅度屈伸，每次2分鐘", effect: "通利膝關節，消腫止痛" },
+      { name: "內膝眼", loc: "膝蓋內側凹陷中", method: "拇指按揉，每次2分鐘", effect: "通絡止痛" },
+      { name: "陽陵泉穴", loc: "小腿外側腓骨小頭前下方凹陷", method: "拇指深按，酸脹為度，每次1分鐘", effect: "舒筋利節" },
+      { name: "血海穴", loc: "膝蓋內側上方2寸", method: "拇指按揉，每次1分鐘", effect: "養血活血，濡養筋脈" },
+    ],
+    osteopathy: [
+      { name: "靠牆半蹲", steps: "背靠牆，雙腳與肩同寬，緩慢下蹲至膝彎曲約45度，保持30秒，做3次", benefit: "增強股四頭肌力量，穩定膝關節" },
+      { name: "直腿抬高", steps: "仰臥，一腳伸直緩慢抬高至45度，保持10秒後放下，每腿做15次", benefit: "強化大腿肌肉，減輕膝關節負擔" },
+      { name: "蠟燭式勾腳", steps: "仰臥直腿抬高，腳尖回勾，感受膝後側拉伸，保持15秒", benefit: "拉伸膝關節周圍軟組織" },
+    ],
+    diet: [
+      { name: "牛膝骨膠湯", desc: "懷牛膝15g、杜仲15g、豬腳1隻（或雞腳8隻）、生薑3片，燉煮2小時", time: "補肝腎、強筋骨" },
+      { name: "黑豆核桃粥", desc: "黑豆30g、核桃仁20g、粳米50g、枸杞10g，煮粥", time: "補腎強骨，適合退化性膝痛" },
+    ],
+    lifestyle_do: ["控制體重，減輕膝關節負擔", "選擇不傷膝的運動（游泳、騎車）", "上下樓梯時扶扶手"],
+    lifestyle_dont: ["避免爬山、頻繁上下樓梯", "避免蹲跪姿勢太久", "避免跌打損傷"],
+    see_doctor: ["膝蓋腫脹發熱無法承重", "活動時有卡住或彈響伴疼痛", "夜間痛醒"],
+  },
+  {
+    condition: "網球肘（肱骨外上髁炎）",
+    keywords: ["手肘痛", "網球肘", "手肘外側", "握拳", "手腕", "前臂"],
+    analysis: "網球肘屬中醫「傷筋」、「肘勞」範疇。多因前臂反覆旋轉或手腕伸展動作過度，導致手陽明大腸經與手少陽三焦經氣血不暢。",
+    patterns: [
+      ["勞損傷筋", "肘外側痠痛、握拳或提物時加重、局部壓痛", "舌淡紅苔薄白、脈弦"],
+      ["氣滯血瘀", "肘部刺痛固定、活動受限、外傷後發生", "舌紫暗、脈澀"],
+      ["寒濕痺阻", "肘部沉重冷痛、遇寒加重、得熱痛減", "舌苔白滑、脈弦緊"],
+    ],
+    acupoints: [
+      { name: "曲池穴", loc: "屈肘，肘橫紋外側端凹陷處", method: "拇指按揉，由輕至重，每次2分鐘", effect: "疏風通絡，緩解肘臂痛" },
+      { name: "手三里穴", loc: "前臂背面，曲池穴下2寸", method: "拇指按壓至酸脹，配合前臂旋轉，每次1分鐘", effect: "通經活絡" },
+      { name: "合谷穴", loc: "手背虎口處", method: "拇指按壓至酸脹，每次1分鐘", effect: "行氣止痛" },
+    ],
+    osteopathy: [
+      { name: "前臂伸展", steps: "患側手臂伸直，掌心朝上，健側手將患側手指向下向後拉，停留20秒", benefit: "拉伸前臂伸肌群" },
+      { name: "反向伸展", steps: "手臂伸直、掌心朝下，健側手將患側手背向下向後拉，停留20秒", benefit: "拉伸前臂屈肌群" },
+      { name: "握力球訓練", steps: "使用軟球或毛巾捲握緊再放開，每次15下，每天3組", benefit: "強化前臂肌群" },
+    ],
+    diet: [
+      { name: "桂枝白芍茶", desc: "桂枝6g、白芍10g、生甘草3g、生薑2片，沸水沖泡", time: "調和營衛，舒筋止痛" },
+      { name: "當歸川芎紅棗湯", desc: "當歸10g、川芎6g、紅棗5顆、瘦肉200g，燉煮1小時", time: "養血活血，通絡止痛" },
+    ],
+    lifestyle_do: ["工作時使用護肘", "搬重物使用大肌群而非手腕", "多伸展前臂肌肉"],
+    lifestyle_dont: ["避免反覆用力抓握或擰毛巾動作", "避免提重物時用患側手臂", "避免單一動作長時間重複"],
+    see_doctor: ["肘關節腫脹發熱", "手臂無法伸直或彎曲", "保守治療2週未改善"],
+  },
+  {
+    condition: "手腕痛（腱鞘炎/媽媽手）",
+    keywords: ["手腕", "媽媽手", "腱鞘炎", "拇指", "手腕痛", "滑手機", "打電腦"],
+    analysis: "手腕痛多因長時間手腕反覆屈伸（打電腦、滑手機、抱小孩）導致經筋勞損。涉及手太陰肺經、手陽明大腸經循行區域。",
+    patterns: [
+      ["勞損傷筋", "手腕外側酸痛、拇指活動時加劇、局部腫脹", "舌淡紅、脈弦"],
+      ["寒濕阻絡", "手腕冷痛、遇寒僵緊、得熱舒展", "舌苔白滑、脈濡緩"],
+      ["瘀血阻滯", "手腕刺痛腫脹、外傷史、活動受限", "舌紫暗、脈澀"],
+    ],
+    acupoints: [
+      { name: "陽谿穴", loc: "手腕背側橫紋，拇指翹起時凹陷處", method: "拇指按揉，每次2分鐘，配合手腕活動", effect: "舒筋活絡，消腫止痛" },
+      { name: "列缺穴", loc: "前臂內側，腕橫紋上1.5寸", method: "拇指按壓至酸脹，每次1分鐘", effect: "通絡止痛" },
+      { name: "合谷穴", loc: "手背虎口處", method: "拇指按壓至酸脹，每次1分鐘", effect: "行氣活血通絡" },
+      { name: "大陵穴", loc: "腕掌側橫紋中點處", method: "拇指按揉，每次1分鐘", effect: "活血通絡" },
+    ],
+    osteopathy: [
+      { name: "手腕伸展", steps: "患側手臂伸直，手心朝前，健側手輕拉手指向後，停留15秒", benefit: "拉伸腕屈肌群" },
+      { name: "反向伸展", steps: "手臂伸直、手背朝前，健側手輕拉手指向後，停留15秒", benefit: "拉伸腕伸肌群" },
+      { name: "握拳轉腕", steps: "握拳，手腕最大幅度順時針轉10圈，逆時針10圈", benefit: "增進腕關節活動度" },
+    ],
+    diet: [
+      { name: "桂枝桑枝茶", desc: "桂枝6g、桑枝10g、白芍10g、甘草3g，沸水沖泡", time: "通絡活血，緩解腕痛" },
+      { name: "生薑紅糖溫飲", desc: "生薑5片、紅糖適量，煮沸5分鐘", time: "驅寒通絡，適合寒性腕痛" },
+    ],
+    lifestyle_do: ["使用人體工學滑鼠及鍵盤", "工作每30分鐘伸展手腕", "使用護腕固定"],
+    lifestyle_dont: ["避免反覆用力彎曲手腕", "避免拇指反覆抓握動作", "避免手機單手長時間操作"],
+    see_doctor: ["手腕腫脹發熱", "手指麻木或無力", "無法握拳或有彈響聲"],
+  },
+  {
+    condition: "足底筋膜炎",
+    keywords: ["腳底", "足底", "腳跟", "足跟", "踩地", "晨起", "足底痛", "足跟痛"],
+    analysis: "足底筋膜炎屬中醫「足跟痛」、「筋痺」範疇。多因肝腎不足、筋骨失養，或久立久行、體重過重導致足底經筋慢性勞損。",
+    patterns: [
+      ["腎虛足跟痛", "足跟酸痛無力、久站加重、伴腰膝酸軟", "舌淡紅、脈沉細"],
+      ["寒濕阻絡", "足底冷痛沉重、晨起第一步最痛、活動後減輕", "舌苔白滑、脈濡緩"],
+      ["氣滯血瘀", "足跟刺痛固定、外傷史、壓痛明顯", "舌紫暗、脈澀"],
+    ],
+    acupoints: [
+      { name: "湧泉穴", loc: "腳底前1/3，腳趾彎曲時凹陷處", method: "拇指用力按壓畫圈，每次3分鐘", effect: "補腎強筋，引火歸元" },
+      { name: "太谿穴", loc: "腳內踝後緣跟腱前方凹陷處", method: "拇指按揉，由輕至重，每次2分鐘", effect: "補腎滋陰，強健腰腳" },
+      { name: "崑崙穴", loc: "腳外踝後緣跟腱前方凹陷處", method: "拇指按壓，每次1分鐘", effect: "舒筋活絡" },
+      { name: "承山穴", loc: "小腿後側正中，腓腸肌下方人字紋凹陷處", method: "拇指深按至酸脹，每次1分鐘", effect: "放鬆小腿肌肉，減輕足底張力" },
+    ],
+    osteopathy: [
+      { name: "足底滾球", steps: "坐姿，腳踩高爾夫球或筋膜球，來回滾動足底，每次3分鐘", benefit: "鬆解足底筋膜" },
+      { name: "毛巾勾腳", steps: "坐姿，用毛巾套住腳前掌向身體方向拉，保持30秒，每腳做3次", benefit: "拉伸足底筋膜與跟腱" },
+      { name: "階梯拉伸", steps: "腳掌前緣踩台階邊緣，腳跟下沉，停留20秒", benefit: "深度拉伸小腿與足底" },
+    ],
+    diet: [
+      { name: "杜仲補骨脂茶", desc: "杜仲10g、補骨脂10g、枸杞5g，沸水沖泡", time: "補腎強骨" },
+      { name: "牛膝豬蹄湯", desc: "懷牛膝15g、豬蹄1隻、紅棗5顆、生薑3片，燉煮2小時", time: "強筋健骨，補充膠質" },
+    ],
+    lifestyle_do: ["選擇支撐性好的鞋子（後跟加厚）", "每天早晚做足底拉伸", "體重過重者適度減重"],
+    lifestyle_dont: ["避免赤腳走硬地板", "避免長時間行走或站立", "避免穿平底鞋或過軟鞋"],
+    see_doctor: ["足底劇痛無法行走", "保守治療一個月未改善", "足部腫脹發熱"],
+  },
+  {
+    condition: "腸胃不適（消化不良）",
+    keywords: ["胃痛", "腹脹", "消化不良", "胃脹", "胃酸", "打嗝", "食慾", "腸胃", "大便"],
+    analysis: "脾胃為後天之本，主運化水穀。飲食不節、情志不遂、勞倦過度皆可損傷脾胃功能，導致升降失司、運化失常。",
+    patterns: [
+      ["脾胃虛弱", "食後腹脹、大便稀溏、食慾不振、面色萎黃", "舌淡胖有齒痕、脈濡弱"],
+      ["食滯胃脘", "胃脘脹滿疼痛、噯腐吞酸、噁心厭食", "舌苔厚膩、脈滑"],
+      ["肝鬱犯胃", "胃脘脹痛連及兩脅、情緒不佳時加重、噯氣頻繁", "舌淡紅苔薄、脈弦"],
+      ["寒邪犯胃", "胃痛暴作、得熱痛減、遇寒加重、口淡不渴", "舌苔薄白、脈弦緊"],
+    ],
+    acupoints: [
+      { name: "足三里穴", loc: "膝蓋外側凹陷下四指寬處", method: "拇指按揉，順時針3分鐘，雙腿交替", effect: "健脾和胃，補益氣血" },
+      { name: "中脘穴", loc: "肚臍上方4寸（胸骨下端到肚臍中點）", method: "手掌搓熱後順時針按揉，每次3分鐘", effect: "和胃降逆，消食導滯" },
+      { name: "天樞穴", loc: "肚臍旁開2寸", method: "拇指按揉，順時針方向，各2分鐘", effect: "調理腸胃，通便止瀉" },
+      { name: "內關穴", loc: "前臂內側，腕橫紋上2寸兩筋之間", method: "拇指按壓至酸脹，每次1分鐘", effect: "和胃降逆，寬胸理氣" },
+    ],
+    osteopathy: [
+      { name: "腹部按摩", steps: "仰臥，手掌以肚臍為中心順時針畫大圈按摩腹部，每次5分鐘", benefit: "促進腸蠕動，緩解腹脹" },
+      { name: "抱膝排氣", steps: "仰臥，雙膝彎曲抱向胸部，前後輕輕搖晃，做10次", benefit: "排出腸道氣體，舒緩腹部不適" },
+      { name: "扭轉放鬆", steps: "仰臥屈膝，雙腿倒向左側，頭轉向右側，停留20秒後換邊", benefit: "脊椎扭轉按摩內臟" },
+    ],
+    diet: [
+      { name: "四神湯", desc: "山藥、蓮子、茯苓、芡實各15g，加豬肚或排骨燉煮", time: "健脾祛濕，增強消化吸收" },
+      { name: "陳皮生薑茶", desc: "陳皮5g、生薑3片、紅糖適量，沸水沖泡", time: "理氣和胃，驅寒消脹" },
+      { name: "山藥小米粥", desc: "山藥100g、小米50g、紅棗5顆，煮粥", time: "健脾養胃，適合脾胃虛弱者" },
+    ],
+    lifestyle_do: ["定時定量、七分飽", "細嚼慢嚥，每口咀嚼20次以上", "飯後散步15分鐘"],
+    lifestyle_dont: ["避免暴飲暴食", "少吃生冷、油膩、甜食", "避免飯後立即躺下"],
+    see_doctor: ["持續胃痛伴隨體重減輕", "黑便或嘔血", "吞嚥困難或持續嘔吐"],
+  },
+  {
+    condition: "失眠",
+    keywords: ["失眠", "睡不著", "難入睡", "易醒", "多夢", "睡眠品質", "淺眠", "熬夜"],
+    analysis: "失眠中醫稱為「不寐」。陽不入陰則不寐。心主神明，肝藏魂，腎藏志。思慮過度傷心脾、鬱怒傷肝、房勞傷腎皆可導致陰陽失調。",
+    patterns: [
+      ["心脾兩虛", "多夢易醒、心悸健忘、食慾不振、面色無華", "舌淡苔薄白、脈細弱"],
+      ["心腎不交", "心煩難眠、腰膝酸軟、潮熱盜汗、耳鳴", "舌紅少苔、脈細數"],
+      ["肝鬱化火", "入睡困難、煩躁易怒、口苦咽乾、便秘", "舌紅苔黃、脈弦數"],
+      ["痰熱內擾", "睡眠不安、胸悶痰多、口苦噁心", "舌苔黃膩、脈滑數"],
+    ],
+    acupoints: [
+      { name: "神門穴", loc: "手腕內側，腕橫紋小指側凹陷處", method: "拇指按揉，力度輕柔，每次2分鐘", effect: "寧心安神，改善睡眠" },
+      { name: "安眠穴", loc: "耳後，翳風穴與風池穴連線中點", method: "食指按揉，由輕至重，每次2分鐘", effect: "鎮靜安眠，專治失眠" },
+      { name: "三陰交穴", loc: "小腿內側，腳踝上3寸", method: "拇指按揉，每次2分鐘", effect: "調和肝脾腎，寧心安神" },
+      { name: "太衝穴", loc: "足背第一、二蹠骨結合部前方凹陷", method: "拇指按壓，由輕至重，每次1分鐘", effect: "疏肝解鬱" },
+    ],
+    osteopathy: [
+      { name: "頭部放鬆", steps: "坐姿，雙手指腹從額頭正中向兩側梳頭至後頸，重複20次", benefit: "放鬆頭皮筋膜，誘導睡眠" },
+      { name: "肩頸鬆解", steps: "坐姿，緩慢繞肩5圈向前、5圈向後", benefit: "釋放肩頸張力，促進放鬆" },
+      { name: "腹式呼吸", steps: "仰臥，手放腹部，吸氣腹部鼓起，呼氣腹部下沉，每次5分鐘", benefit: "激活副交感神經，幫助入睡" },
+    ],
+    diet: [
+      { name: "酸棗仁安神茶", desc: "酸棗仁15g（搗碎）、百合10g、茯苓10g，水煎睡前1小時飲用", time: "養心安神，改善失眠" },
+      { name: "桂圓紅棗蓮子湯", desc: "桂圓肉15g、紅棗5顆、蓮子15g、冰糖適量，煮30分鐘", time: "補心脾、養氣血、安神" },
+      { name: "小米牛奶粥", desc: "小米50g煮粥，加入溫牛奶適量，睡前1小時食用", time: "富含色胺酸，助眠" },
+    ],
+    lifestyle_do: ["固定作息時間，假日不補眠超過1小時", "睡前1小時不使用電子產品", "保持臥室涼爽、黑暗、安靜"],
+    lifestyle_dont: ["避免睡前4小時飲用咖啡、茶或酒精", "避免睡前劇烈運動", "避免床上滑手機或工作"],
+    see_doctor: ["長期失眠超過一個月", "伴隨嚴重焦慮或憂鬱情緒", "睡眠呼吸中止症狀"],
+  },
+];
+
+// ============================================================
+// UI 邏輯
+// ============================================================
+
+/** 初始化：列出所有症狀、設定快捷標籤 */
+function init() {
+  const grid = document.getElementById("condition-grid");
+  const tips = document.getElementById("search-tips");
+  grid.innerHTML = "";
+  tips.innerHTML = "";
+
+  const used = new Set();
+  TCM_KNOWLEDGE_BASE.forEach((item, idx) => {
+    // 添加到網格
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = item.condition;
+    div.onclick = () => showResult(item);
+    grid.appendChild(div);
+
+    // 將前 2 個關鍵詞當作標籤
+    item.keywords.slice(0, 2).forEach(kw => {
+      if (used.size >= 16) return;
+      if (!used.has(kw)) {
+        used.add(kw);
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = kw;
+        tag.onclick = () => {
+          document.getElementById("symptom-input").value = kw;
+          handleSearch();
+        };
+        tips.appendChild(tag);
+      }
+    });
+  });
+
+  // Enter key 觸發搜尋
+  document.getElementById("symptom-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") handleSearch();
+  });
+}
+
+/** 處理搜尋 */
+function handleSearch() {
+  const query = document.getElementById("symptom-input").value.trim();
+  if (!query) return;
+
+  showLoading(true);
+  hideEmptyState();
+  clearResults();
+
+  // 微延遲以顯示 loading（模擬思考）
+  setTimeout(() => {
+    const matches = matchConditions(query);
+    showLoading(false);
+
+    if (matches.length === 0) {
+      showEmptyState();
+      return;
+    }
+
+    renderResults(matches);
+  }, 300);
+}
+
+/** 匹配引擎 */
+function matchConditions(query) {
+  const scored = [];
+  TCM_KNOWLEDGE_BASE.forEach((item, idx) => {
+    let score = 0;
+    // 關鍵詞匹配
+    item.keywords.forEach(kw => {
+      if (query.includes(kw)) score += 3;
+      else if (kw.includes(query)) score += 1;
+    });
+    // 症狀名稱匹配
+    if (query.includes(item.condition)) score += 5;
+    // 簡單文字相似度
+    const sim = similarity(query, item.condition);
+    score += sim * 2;
+
+    if (score > 0) scored.push({ score, idx, item });
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored;
+}
+
+/** 簡單文字相似度（基於共同子字串） */
+function similarity(a, b) {
+  let common = 0;
+  for (let i = 0; i < a.length; i++) {
+    for (let j = i + 1; j <= a.length; j++) {
+      if (b.includes(a.substring(i, j))) {
+        common = Math.max(common, j - i);
+      }
+    }
+  }
+  return (2.0 * common) / (a.length + b.length);
+}
+
+/** 渲染結果 */
+function renderResults(matches) {
+  const container = document.getElementById("result-container");
+  container.innerHTML = "";
+
+  // Tab 切換（多筆結果）
+  if (matches.length > 1) {
+    const tabBar = document.createElement("div");
+    tabBar.className = "result-tabs";
+    matches.slice(0, 3).forEach((m, i) => {
+      const tab = document.createElement("span");
+      tab.className = "tab" + (i === 0 ? " active" : "");
+      tab.textContent = m.item.condition;
+      tab.onclick = () => switchTab(i);
+      tabBar.appendChild(tab);
+    });
+    container.appendChild(tabBar);
+
+    // 儲存 tab 列表供切換
+    container._tabs = tabBar;
+  }
+
+  // 渲染結果卡片（最多 3 筆）
+  matches.slice(0, 3).forEach((m, i) => {
+    const card = createResultCard(m.item, m.score, i);
+    container.appendChild(card);
+  });
+
+  // 顯示第 0 筆
+  showTab(0);
+}
+
+/** 建立單一結果卡片 */
+function createResultCard(item, score, index) {
+  const card = document.createElement("div");
+  card.className = "result-card" + (index === 0 ? " active" : "");
+  card.dataset.index = index;
+
+  // 匹配度百分比
+  const maxPossible = 25;
+  const pct = Math.min(100, Math.round((score / maxPossible) * 100));
+
+  let html = `
+    <span class="match-badge">匹配度 ${pct}%</span>
+    <div class="result-section">
+      <h3>📋 症狀分析</h3>
+      <p>${item.analysis}</p>
+    </div>
+    <div class="result-section">
+      <h3>🔍 常見證型</h3>
+      <table class="pattern-table">
+        <thead><tr><th>證型</th><th>典型表現</th><th>舌脈特徵</th></tr></thead>
+        <tbody>
+          ${item.patterns.map(p => `<tr><td><strong>${p[0]}</strong></td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="result-section">
+      <h3>✨ 經絡穴位保健</h3>
+      ${item.acupoints.map(a => `
+        <div class="acupoint-item">
+          <strong>${a.name}</strong>
+          <span class="meta">📍 ${a.loc}</span>
+          <span class="meta">👆 ${a.method}</span>
+          <span class="meta">💫 ${a.effect}</span>
+        </div>
+      `).join("")}
+    </div>
+    <div class="result-section">
+      <h3>🖐️ 傳統整復自我保健</h3>
+      ${item.osteopathy.map(o => `
+        <div class="osteo-item">
+          <strong>${o.name}</strong>
+          <p style="margin-top:4px;">📝 ${o.steps}</p>
+          <p style="font-size:0.85rem;color:var(--text-light);margin-top:2px;">💪 ${o.benefit}</p>
+        </div>
+      `).join("")}
+    </div>
+    <div class="result-section">
+      <h3>🥘 藥膳食療推薦</h3>
+      ${item.diet.map(d => `
+        <div class="diet-item">
+          <strong>${d.name}</strong>
+          <p style="margin-top:4px;">🥄 ${d.desc}</p>
+          <span class="meta">⏰ ${d.time}</span>
+        </div>
+      `).join("")}
+    </div>
+    <div class="result-section">
+      <h3>⚠️ 生活提醒與禁忌</h3>
+      <div class="lifestyle-grid">
+        <div class="lifestyle-do">
+          <h4>✅ 建議</h4>
+          <ul>${item.lifestyle_do.map(t => `<li>${t}</li>`).join("")}</ul>
+        </div>
+        <div class="lifestyle-dont">
+          <h4>❌ 避免</h4>
+          <ul>${item.lifestyle_dont.map(t => `<li>${t}</li>`).join("")}</ul>
+        </div>
+      </div>
+    </div>
+    <div class="result-section">
+      <h3>🏥 何時需要看醫師</h3>
+      <div class="see-doctor">
+        <ul>${item.see_doctor.map(s => `<li>${s}</li>`).join("")}</ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>⚕️ 免責聲明</strong>：以上建議僅供保健參考，不構成醫療診斷或處方。如有持續不適，請務必諮詢合格中醫師或相關醫療專業人員。
+    </div>
+  `;
+
+  card.innerHTML = html;
+  return card;
+}
+
+/** 切換顯示哪個 tab */
+function switchTab(index) {
+  const container = document.getElementById("result-container");
+  const tabs = container._tabs;
+  if (tabs) {
+    Array.from(tabs.children).forEach((t, i) => {
+      t.classList.toggle("active", i === index);
+    });
+  }
+  showTab(index);
+}
+
+function showTab(index) {
+  const container = document.getElementById("result-container");
+  Array.from(container.querySelectorAll(".result-card")).forEach(c => {
+    c.classList.toggle("active", parseInt(c.dataset.index) === index);
+  });
+}
+
+function showResult(item) {
+  // 直接從條件清單點擊
+  document.getElementById("symptom-input").value = item.condition;
+  handleSearch();
+}
+
+function showLoading(show) {
+  document.getElementById("loading").classList.toggle("active", show);
+}
+
+function showEmptyState() {
+  document.getElementById("empty-state").classList.add("active");
+}
+
+function hideEmptyState() {
+  document.getElementById("empty-state").classList.remove("active");
+}
+
+function clearResults() {
+  const container = document.getElementById("result-container");
+  container.innerHTML = "";
+}
+
+// ============================================================
+// 啟動
+// ============================================================
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
