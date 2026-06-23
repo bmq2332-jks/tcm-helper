@@ -125,7 +125,7 @@
     font-size: 0.85rem;
     margin-bottom: 28px;
   }
-  .login-box input[type="password"] {
+  .login-box input[type="text"] {
     width: 100%;
     padding: 14px 18px;
     border: 2px solid rgba(255,255,255,0.15);
@@ -138,12 +138,13 @@
     text-align: center;
     letter-spacing: 4px;
     box-sizing: border-box;
+    -webkit-text-security: disc;
   }
-  .login-box input[type="password"]::placeholder {
+  .login-box input[type="text"]::placeholder {
     color: rgba(255,255,255,0.3);
     letter-spacing: 1px;
   }
-  .login-box input[type="password"]:focus {
+  .login-box input[type="text"]:focus {
     border-color: var(--accent);
     background: rgba(255,255,255,0.1);
   }
@@ -535,7 +536,7 @@
     <div class="logo">🏥</div>
     <h2>中醫診療助手</h2>
     <p>請輸入密碼以繼續使用</p>
-    <input type="password" id="passwordInput" placeholder="請輸入密碼" maxlength="20" autocomplete="off" />
+    <input type="text" id="passwordInput" placeholder="請輸入密碼" maxlength="20" autocomplete="off" inputmode="text" />
     <button class="login-btn" id="loginBtn" onclick="handleLogin()">進入</button>
     <div class="login-error" id="loginError">⚠️ 密碼錯誤，請重新輸入</div>
     <div class="login-hint">僅供授權使用者</div>
