@@ -441,7 +441,7 @@
     <label for="symptom-input">🔍 請輸入您的症狀或不舒服的部位</label>
     <div class="search-row">
       <input type="text" id="symptom-input" placeholder="例如：頭痛、肩頸酸痛、失眠、腰酸背痛…" />
-      <button onclick="handleSearch()">查詢</button>
+      <button onclick="handleSearch(true)">查詢</button>
     </div>
     <div class="search-tips" id="search-tips"></div>
   </div>
@@ -852,7 +852,7 @@ function init() {
         tag.textContent = kw;
         tag.onclick = () => {
           document.getElementById("symptom-input").value = kw;
-          handleSearch();
+          handleSearch(false);
         };
         tips.appendChild(tag);
       }
@@ -861,12 +861,12 @@ function init() {
 
   // Enter key 觸發搜尋
   document.getElementById("symptom-input").addEventListener("keydown", e => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") handleSearch(false);
   });
 }
 
 /** 處理搜尋 */
-function handleSearch() {
+function handleSearch(shouldScroll = false) {
   const query = document.getElementById("symptom-input").value.trim();
   if (!query) return;
 
@@ -884,7 +884,7 @@ function handleSearch() {
       return;
     }
 
-    renderResults(matches);
+    renderResults(matches, shouldScroll);
   }, 300);
 }
 
@@ -925,7 +925,7 @@ function similarity(a, b) {
 }
 
 /** 渲染結果 */
-function renderResults(matches) {
+function renderResults(matches, shouldScroll = false) {
   const container = document.getElementById("result-container");
   container.innerHTML = "";
 
@@ -955,16 +955,18 @@ function renderResults(matches) {
   // 顯示第 0 筆
   showTab(0);
 
-  // 自動滾動到症狀分析區塊
-  setTimeout(() => {
-    const firstCard = container.querySelector(".result-card.active");
-    if (firstCard) {
-      const analysisSection = firstCard.querySelector("[id^='symptom-analysis-']");
-      if (analysisSection) {
-        analysisSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  // 僅在按下「查詢」按鈕時，才滾動到症狀分析
+  if (shouldScroll) {
+    setTimeout(() => {
+      const firstCard = container.querySelector(".result-card.active");
+      if (firstCard) {
+        const analysisSection = firstCard.querySelector("[id^='symptom-analysis-']");
+        if (analysisSection) {
+          analysisSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }
-    }
-  }, 100);
+    }, 100);
+  }
 }
 
 /** 建立單一結果卡片 */
