@@ -526,6 +526,32 @@
     .result-card { box-shadow: none; padding: 0; }
     header { background: var(--primary) !important; }
   }
+
+  /* ===== Logout Button ===== */
+  .logout-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.8);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+  }
+  .logout-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  .logout-btn.show {
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -552,6 +578,9 @@
     <span class="badge">🌿 辨證論治 · 經絡穴位 · 整復保健 · 藥膳食療</span>
     <span class="credit">製作程式：國祥</span>
   </header>
+
+  <!-- Logout Button -->
+  <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">🚪 登出</button>
 
   <!-- Search Section -->
   <div class="search-section">
@@ -1242,6 +1271,7 @@ function handleLogin() {
 function enterApp() {
   const overlay = document.getElementById("loginOverlay");
   const app = document.getElementById("appContainer");
+  const logoutBtn = document.getElementById("logoutBtn");
 
   // 淡出登入畫面
   overlay.classList.add("hidden");
@@ -1250,8 +1280,31 @@ function enterApp() {
   setTimeout(() => {
     overlay.style.display = "none";
     app.style.display = "block";
+    logoutBtn.classList.add("show");
     init();
   }, 500);
+}
+
+function handleLogout() {
+  localStorage.removeItem("tcm_helper_logged_in");
+  const overlay = document.getElementById("loginOverlay");
+  const app = document.getElementById("appContainer");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const pwInput = document.getElementById("passwordInput");
+
+  // 淡出主畫面
+  app.style.display = "none";
+  logoutBtn.classList.remove("show");
+
+  // 顯示登入畫面
+  overlay.style.display = "flex";
+  overlay.classList.remove("hidden");
+
+  // 清空密碼欄並聚焦
+  if (pwInput) {
+    pwInput.value = "";
+    pwInput.focus();
+  }
 }
 
 function checkLogin() {
