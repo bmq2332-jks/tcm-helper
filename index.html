@@ -126,7 +126,7 @@
     font-size: 0.85rem;
     margin-bottom: 28px;
   }
-  .login-box input[type="text"] {
+  .login-box input[type="password"] {
     width: 100%;
     padding: 14px 18px;
     border: 2px solid rgba(255,255,255,0.15);
@@ -139,15 +139,38 @@
     text-align: center;
     letter-spacing: 4px;
     box-sizing: border-box;
-    -webkit-text-security: disc;
   }
-  .login-box input[type="text"]::placeholder {
+  .login-box input[type="password"]::placeholder {
     color: rgba(255,255,255,0.3);
     letter-spacing: 1px;
   }
-  .login-box input[type="text"]:focus {
+  .login-box input[type="password"]:focus {
     border-color: var(--accent);
     background: rgba(255,255,255,0.1);
+  }
+
+  /* Password wrapper */
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .toggle-pwd-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+  .toggle-pwd-btn:hover {
+    color: rgba(255,255,255,0.85);
   }
   .login-box .login-btn {
     width: 100%;
@@ -561,7 +584,13 @@
     <div class="logo">🏥</div>
     <h2>中醫診療助手</h2>
     <p>請輸入密碼以繼續使用</p>
-    <input type="text" id="passwordInput" placeholder="請輸入密碼" maxlength="20" autocomplete="off" inputmode="text" />
+    <div class="password-wrapper">
+      <input type="password" id="passwordInput" placeholder="請輸入密碼" maxlength="20" autocomplete="off" />
+      <button type="button" class="toggle-pwd-btn" id="togglePwdBtn" onclick="togglePassword()" aria-label="顯示密碼">
+        <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
     <button class="login-btn" id="loginBtn" onclick="handleLogin()">進入</button>
     <div class="login-error" id="loginError">⚠️ 密碼錯誤，請重新輸入</div>
     <div class="login-hint">僅供授權使用者</div>
@@ -1262,6 +1291,28 @@ function handleLogin() {
     setTimeout(() => {
       input.style.borderColor = "rgba(255,255,255,0.15)";
     }, 800);
+  }
+}
+
+// ============================================================
+// 密碼顯示/隱藏切換
+// ============================================================
+
+function togglePassword() {
+  const input = document.getElementById("passwordInput");
+  const eyeOpen = document.getElementById("eyeOpen");
+  const eyeClosed = document.getElementById("eyeClosed");
+  const isPassword = input.type === "password";
+
+  if (isPassword) {
+    input.type = "text";
+    input.style.letterSpacing = "4px";
+    eyeOpen.style.display = "none";
+    eyeClosed.style.display = "block";
+  } else {
+    input.type = "password";
+    eyeOpen.style.display = "block";
+    eyeClosed.style.display = "none";
   }
 }
 
