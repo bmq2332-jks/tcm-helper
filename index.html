@@ -954,6 +954,17 @@ function renderResults(matches) {
 
   // 顯示第 0 筆
   showTab(0);
+
+  // 自動滾動到症狀分析區塊
+  setTimeout(() => {
+    const firstCard = container.querySelector(".result-card.active");
+    if (firstCard) {
+      const analysisSection = firstCard.querySelector("[id^='symptom-analysis-']");
+      if (analysisSection) {
+        analysisSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, 100);
 }
 
 /** 建立單一結果卡片 */
@@ -966,9 +977,9 @@ function createResultCard(item, score, index) {
   const maxPossible = 25;
   const pct = Math.min(100, Math.round((score / maxPossible) * 100));
 
-  let html = `
+    let html = `
     <span class="match-badge">匹配度 ${pct}%</span>
-    <div class="result-section">
+    <div class="result-section" id="symptom-analysis-${index}">
       <h3>📋 症狀分析</h3>
       <p>${item.analysis}</p>
     </div>
