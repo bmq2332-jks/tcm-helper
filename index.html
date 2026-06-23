@@ -126,7 +126,7 @@
     font-size: 0.85rem;
     margin-bottom: 28px;
   }
-  .login-box input[type="password"] {
+  .login-box input[type="text"] {
     width: 100%;
     padding: 14px 18px;
     border: 2px solid rgba(255,255,255,0.15);
@@ -140,11 +140,17 @@
     letter-spacing: 4px;
     box-sizing: border-box;
   }
-  .login-box input[type="password"]::placeholder {
+  .login-box input[type="text"].pwd-hidden {
+    -webkit-text-security: disc;
+  }
+  .login-box input[type="text"].pwd-visible {
+    -webkit-text-security: none;
+  }
+  .login-box input[type="text"]::placeholder {
     color: rgba(255,255,255,0.3);
     letter-spacing: 1px;
   }
-  .login-box input[type="password"]:focus {
+  .login-box input[type="text"]:focus {
     border-color: var(--accent);
     background: rgba(255,255,255,0.1);
   }
@@ -591,7 +597,7 @@
     <h2>中醫診療助手</h2>
     <p>請輸入密碼以繼續使用</p>
     <div class="password-wrapper">
-      <input type="password" id="passwordInput" placeholder="請輸入密碼" maxlength="20" autocomplete="off" />
+      <input type="text" id="passwordInput" class="pwd-hidden" placeholder="請輸入密碼" maxlength="20" autocomplete="off" />
       <button type="button" class="toggle-pwd-btn" id="togglePwdBtn" onclick="togglePassword()" aria-label="顯示密碼">
         <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -1308,15 +1314,16 @@ function togglePassword() {
   const input = document.getElementById("passwordInput");
   const eyeOpen = document.getElementById("eyeOpen");
   const eyeClosed = document.getElementById("eyeClosed");
-  const isPassword = input.type === "password";
+  const isHidden = input.classList.contains("pwd-hidden");
 
-  if (isPassword) {
-    input.type = "text";
-    input.style.letterSpacing = "4px";
+  if (isHidden) {
+    input.classList.remove("pwd-hidden");
+    input.classList.add("pwd-visible");
     eyeOpen.style.display = "none";
     eyeClosed.style.display = "block";
   } else {
-    input.type = "password";
+    input.classList.remove("pwd-visible");
+    input.classList.add("pwd-hidden");
     eyeOpen.style.display = "block";
     eyeClosed.style.display = "none";
   }
