@@ -51,6 +51,7 @@
     margin-bottom: 28px;
     color: #fff;
     box-shadow: var(--shadow);
+    position: relative;
   }
   header h1 {
     font-size: 1.6rem;
@@ -529,9 +530,9 @@
 
   /* ===== Logout Button ===== */
   .logout-btn {
-    position: fixed;
-    top: 16px;
-    right: 16px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
     padding: 6px 16px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.25);
@@ -541,8 +542,6 @@
     cursor: pointer;
     transition: all 0.2s;
     z-index: 100;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     display: none;
   }
   .logout-btn:hover {
@@ -573,14 +572,12 @@
 
   <!-- Header -->
   <header>
+    <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">🚪 登出</button>
     <h1><span class="icon">🏥</span> 中醫診療助手</h1>
     <p>中醫及傳統整復 — 疑難雜症智慧解答</p>
     <span class="badge">🌿 辨證論治 · 經絡穴位 · 整復保健 · 藥膳食療</span>
     <span class="credit">製作程式：國祥</span>
   </header>
-
-  <!-- Logout Button -->
-  <button class="logout-btn" id="logoutBtn" onclick="handleLogout()">🚪 登出</button>
 
   <!-- Search Section -->
   <div class="search-section">
