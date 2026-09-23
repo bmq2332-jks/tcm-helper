@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中醫診療助手 V3 — 中醫及傳統整復疑難雜症解答（電療・熱敷全新療法）</title>
+<title>中醫診療助手 V3 — 中醫及傳統整復疑難雜症解答（各症狀附電療・熱敷處置建議）</title>
 <style>
   /* ===== Reset & Base ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -328,32 +328,6 @@
     border-color: var(--accent);
   }
 
-  /* Mode Tabs（症狀 / 療法切換） */
-  .mode-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .mode-tabs .mode-tab {
-    padding: 8px 18px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    color: var(--text);
-  }
-  .mode-tabs .mode-tab:hover {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
-  .mode-tabs .mode-tab.active {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-  }
-
   /* 禁忌症警示框 */
   .warning-box {
     background: #fdf3f2;
@@ -371,24 +345,6 @@
     color: #8a3b35;
     line-height: 1.7;
   }
-  .thera-list {
-    list-style: none;
-    padding: 0;
-  }
-  .thera-list li {
-    padding: 5px 0 5px 22px;
-    position: relative;
-    font-size: 0.9rem;
-    line-height: 1.7;
-  }
-  .thera-list li::before {
-    content: "▸";
-    position: absolute;
-    left: 4px;
-    color: var(--accent);
-    font-weight: 700;
-  }
-
   /* ===== Result Card ===== */
   .result-card {
     display: none;
@@ -742,10 +698,6 @@
 
   <!-- Condition List -->
   <div class="condition-list-section" id="condition-list-section">
-    <div class="mode-tabs" id="mode-tabs">
-      <button type="button" class="mode-tab active" id="mode-symptom" onclick="switchMode('symptom')">🔍 症狀查詢</button>
-      <button type="button" class="mode-tab" id="mode-therapy" onclick="switchMode('therapy')">💡 療法查詢</button>
-    </div>
     <h2 id="list-title">📋 可查詢的常見症狀</h2>
     <div class="condition-grid" id="condition-grid"></div>
   </div>
@@ -776,7 +728,7 @@
 
 <script>
 // ============================================================
-// 中醫知識庫 V3 — 24 個症狀條件 + 電療 / 熱敷療法（與 Python CLI 同步）
+// 中醫知識庫 V3 — 25 個症狀條件（與 Python CLI 同步）
 // ============================================================
 const TCM_KNOWLEDGE_BASE = [
   {
@@ -1782,165 +1734,12 @@ const TCM_KNOWLEDGE_BASE = [
 ];
 
 // ============================================================
-// 療法知識庫 V3 — 電療、熱敷療法（新增）
-// ============================================================
-const THERAPY_KNOWLEDGE_BASE = [
-  {
-    condition: "電療（低頻/中頻電刺激）",
-    type: "therapy",
-    keywords: ["電療", "TENS", "低頻電", "中頻電", "電針", "經皮神經電刺激", "肌肉電刺激"],
-    analysis: "電療是運用低頻或中頻電流刺激經絡與肌肉的物理療法。以中醫觀點而言，電流通過穴位與經絡循行路徑，可達「疏通經絡、行氣活血、鎮痛解痙」之效，與針灸的「得氣」原理相通。臨床上常用於緩解肌肉筋膜疼痛、促進局部血液循環、改善肌肉無力與痠脹感。",
-    suitableFor: [
-      "肩頸僵硬、落枕後的肌肉緊繃",
-      "腰背肌勞損、久坐引起的慢性腰酸",
-      "網球肘、媽媽手等肌腱勞損疼痛",
-      "退化性關節炎引起的關節酸痛",
-      "運動後肌肉痠痛與疲勞恢復",
-    ],
-    howTo: [
-      "電極貼片貼於痛點兩側或肌肉起止點，避開骨突處與關節腔",
-      "強度以「明顯但可耐受的麻刺感」為準，切勿追求強烈刺激",
-      "每次療程 15-20 分鐘，每天 1 次，連續不超過 2 週",
-      "使用後以清水清潔貼片與皮膚，存放於乾燥陰涼處",
-      "建議在專業人員指導下操作，居家使用選用有醫療認證的儀器",
-    ],
-    acupoints: [
-      { name: "合谷穴", loc: "手背虎口處", method: "電極或按壓刺激，每次2分鐘", effect: "行氣活血，通絡止痛" },
-      { name: "曲池穴", loc: "屈肘，肘橫紋外側端凹陷處", method: "電極放置於肘外側，強度宜低", effect: "疏風清熱，緩解上肢痠痛" },
-      { name: "承山穴", loc: "小腿後側，用力伸直小腿時肌肉下緣凹陷處", method: "適合小腿痠脹時的電極擺放點", effect: "舒筋活絡，緩解下肢疲勞" },
-      { name: "陽陵泉穴", loc: "小腿外側，腓骨頭前下方凹陷處", method: "電極貼於膝外下方，輕強度刺激", effect: "疏利膽經，強健筋骨" },
-    ],
-    lifestyle_do: ["電療前先按摩放鬆目標肌肉，效果更好", "療程後多喝水，幫助代謝產物排出", "搭配適度伸展與熱敷交替使用", "使用後記錄皮膚反應，異常時停止並諮詢專業"],
-    lifestyle_dont: ["兒童、老年人或皮膚乾燥者勿自行增加強度", "不要在運動、進食後立即進行", "勿在潮濕環境或淋浴時使用", "勿長時間連續使用超過規定的療程天數"],
-    contraindications: [
-      "體內裝有植入式心律調節器（pacemaker）或去顫器（ICD）者絕對禁用",
-      "懷孕者禁止在腹部、腰部及骨盆區域使用",
-      "癲癇病史者禁用於頭頸部",
-      "嚴重心臟病、心律不整患者禁用",
-      "皮膚感覺障礙或糖尿病末梢神經病變者（無法正確感知強度）禁用",
-      "電極嚴禁跨過心臟位置（如左胸前右背對貼）",
-      "電極勿置於頸動脈竇、喉部、眼睛周圍",
-      "皮膚破損、發炎、感染或近期手術傷口處禁用",
-      "未經診斷的疼痛，請先就醫查明原因再考慮電療",
-    ],
-    safetyTips: [
-      "初次使用先以最低強度試 2-3 分鐘確認無不適",
-      "若出現皮膚灼傷、刺痛加劇或麻木感，立即停止",
-      "電極片不共用，以免交叉感染",
-      "使用環境保持乾燥，遠離水源與易燃物",
-    ],
-    see_doctor: ["疼痛持續超過兩週且電療無明顯改善", "伴隨發燒、紅腫熱痛等發炎徵象", "出現下肢無力、麻木或大小便功能異常", "皮膚出現不明紅疹、水泡或過敏反應"],
-  },
-  {
-    condition: "熱敷療法",
-    type: "therapy",
-    keywords: ["熱敷", "熱奄包", "熱熨", "溫敷", "毛巾熱敷", "紅豆暖暖包"],
-    analysis: "熱敷是中醫「溫法」的代表性外治技術，透過熱能作用於體表，達到「溫經散寒、活血通絡、行氣止痛」之效。適合寒性體質、氣血運行不暢、風寒濕痺等證型，常用於緩解關節冷痛、經期腹痛、腸胃虛寒與慢性肌肉僵緊。",
-    suitableFor: [
-      "宮寒痛經、經期腹部冷痛",
-      "風寒型頭痛、頸肩受涼僵硬",
-      "退化性關節炎遇冷加重的關節疼痛",
-      "腸胃虛寒引起的腹痛、腹瀉",
-      "慢性腰背肌肉僵硬、四肢冰冷",
-    ],
-    howTo: [
-      "使用 40-50℃ 的熱水袋、熱毛巾或紅豆暖暖包，以手背試溫不燙手為準",
-      "務必隔一層乾布再敷於皮膚，避免直接接觸造成燙傷",
-      "每次 15-20 分鐘，每天 1-2 次為宜",
-      "熱敷後皮膚微紅屬正常，若出現水泡或劇痛即為燙傷，立即停用",
-      "可搭配按摩或輕度伸展，效果更佳",
-    ],
-    acupoints: [
-      { name: "關元穴", loc: "肚臍正下方三寸（四橫指）處", method: "熱敷或溫灸，每次10-15分鐘", effect: "培補元氣，溫陽散寒" },
-      { name: "氣海穴", loc: "肚臍正下方一寸半處", method: "熱敷於此處，適合腹部冷痛", effect: "益氣助陽，調理腸胃" },
-      { name: "神闕穴", loc: "肚臍中央", method: "溫熱毛巾覆蓋，注意力度與溫度", effect: "溫陽散寒，回陽固脫" },
-      { name: "命門穴", loc: "第二腰椎棘突下，與肚臍相對", method: "熱敷腰後部，適合腰膝冷痛", effect: "溫補腎陽，強腰壯骨" },
-    ],
-    lifestyle_do: ["熱敷後趁毛孔張開喝一杯溫熱飲，助氣血流通", "慢性關節痛可與電熱毯、艾灸交替使用", "敷完注意保暖，避免立即吹風受涼", "手腳冰冷者可於睡前熱敷足三里一帶助眠"],
-    lifestyle_dont: ["感覺遲鈍者（如年長者）需他人協助確認溫度", "勿在過飽、過飢狀態下立即熱敷腹部", "不要同時多處長時間熱敷，以免體液流失過多", "不要用溫度過高的蒸汽直接燙敷"],
-    contraindications: [
-      "急性損傷（扭傷、拉傷）48-72 小時內禁用，以免加重腫脹出血",
-      "糖尿病末梢循環不良者禁用（燙傷不易自知）",
-      "皮膚感覺遲鈍或長期臥床者禁用",
-      "開放性傷口、皮膚潰瘍、濕疹或感染處禁用",
-      "高熱、急性發炎（紅腫熱痛明顯）處禁用",
-      "孕婦禁用腹部及腰骶部熱敷",
-      "腫瘤區域或原因不明的腫塊處禁用",
-      "嚴重心血管疾病、血壓不穩者慎用",
-    ],
-    safetyTips: [
-      "以手背測溫是防燙傷的第一道防線",
-      "高齡者、糖尿病患者敷熱時務必有家屬在旁",
-      "熱敷過程若頭暈、心悸、大量出汗，立即停止休息",
-      "電熱產品（電熱水袋等）請選有安全認證的產品",
-    ],
-    see_doctor: ["熱敷後疼痛反而加劇或出現腫脹", "皮膚出現持續性紅斑、水泡或破皮", "腹痛伴隨發燒、嘔吐或血便", "關節紅腫熱痛（屬熱性炎症）持續惡化"],
-  },
-];
-
-// ============================================================
 // UI 邏輯
 // ============================================================
 
-/** 目前模式：symptom（症狀）| therapy（療法） */
-let currentMode = "symptom";
-
-/** 切換症狀 / 療法模式 */
-function switchMode(mode) {
-  currentMode = mode;
-  document.getElementById("mode-symptom").classList.toggle("active", mode === "symptom");
-  document.getElementById("mode-therapy").classList.toggle("active", mode === "therapy");
-
-  const label = document.getElementById("search-label");
-  const input = document.getElementById("symptom-input");
-  const title = document.getElementById("list-title");
-
-  if (mode === "therapy") {
-    label.textContent = "🔍 請輸入療法名稱（例如：電療、熱敷）";
-    input.placeholder = "例如：電療、TENS、熱敷、熱奄包…";
-  } else {
-    label.textContent = "🔍 請輸入您的症狀或不舒服的部位";
-    input.placeholder = "例如：頭痛、肩頸酸痛、失眠、腰酸背痛…";
-  }
-  title.textContent = mode === "therapy" ? "💡 療法保健教室" : "📋 可查詢的常見症狀";
-
-  // 快捷標籤僅供症狀模式使用
-  const tips = document.getElementById("search-tips");
-  if (mode === "therapy") {
-    tips.innerHTML = "";
-    tips.style.display = "none";
-  } else {
-    tips.style.display = "";
-    initSearchTips();
-  }
-
-  input.value = "";
-  hideEmptyState();
-  clearResults();
-  renderGrid();
-}
-
-/** 依目前模式渲染網格 */
-function renderGrid() {
-  const grid = document.getElementById("condition-grid");
-  grid.innerHTML = "";
-
-  if (currentMode === "therapy") {
-    THERAPY_KNOWLEDGE_BASE.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "item";
-      div.textContent = item.condition;
-      div.onclick = () => showResult(item);
-      grid.appendChild(div);
-    });
-  } else {
-    initSymptomGrid();
-  }
-}
-
 /** 初始化：列出所有症狀、設定快捷標籤 */
 function init() {
-  renderGrid();
+  initSymptomGrid();
   initSearchTips();
 
   // Enter key 觸發搜尋
@@ -1996,7 +1795,7 @@ function handleSearch(shouldScroll = false) {
 
   // 微延遲以顯示 loading（模擬思考）
   setTimeout(() => {
-    const base = currentMode === "therapy" ? THERAPY_KNOWLEDGE_BASE : TCM_KNOWLEDGE_BASE;
+    const base = TCM_KNOWLEDGE_BASE;
     const matches = matchConditions(query, base);
     showLoading(false);
 
@@ -2092,9 +1891,6 @@ function renderResults(matches, shouldScroll = false) {
 
 /** 建立單一結果卡片 */
 function createResultCard(item, score, index) {
-  // 療法條目使用專用卡片模板
-  if (item.type === "therapy") return createTherapyCard(item, score, index);
-
   const card = document.createElement("div");
   card.className = "result-card" + (index === 0 ? " active" : "");
   card.dataset.index = index;
@@ -2184,80 +1980,6 @@ function createResultCard(item, score, index) {
     </div>
     <div class="disclaimer">
       <strong>⚕️ 免責聲明</strong>：以上建議僅供保健參考，不構成醫療診斷或處方。如有持續不適，請務必諮詢合格中醫師或相關醫療專業人員。
-    </div>
-  `;
-
-  card.innerHTML = html;
-  return card;
-}
-
-/** 建立療法結果卡片（電療 / 熱敷） */
-function createTherapyCard(item, score, index) {
-  const card = document.createElement("div");
-  card.className = "result-card" + (index === 0 ? " active" : "");
-  card.dataset.index = index;
-
-  const maxPossible = 25;
-  const pct = Math.min(100, Math.round((score / maxPossible) * 100));
-
-  const li = arr => `<ul class="thera-list">${arr.map(s => `<li>${s}</li>`).join("")}</ul>`;
-
-  let html = `
-    <span class="match-badge">匹配度 ${pct}%</span>
-    <div class="result-section" id="symptom-analysis-${index}">
-      <h3>💡 療法原理</h3>
-      <p>${item.analysis}</p>
-    </div>
-    <div class="result-section">
-      <h3>🎯 適用對象與症狀</h3>
-      ${li(item.suitableFor)}
-    </div>
-    <div class="result-section">
-      <h3>🛠️ 正確操作方式</h3>
-      ${li(item.howTo)}
-    </div>
-    <div class="result-section">
-      <h3>✨ 搭配穴位保健</h3>
-      ${item.acupoints.map(a => `
-        <div class="acupoint-item">
-          <strong>${a.name}</strong>
-          <span class="meta">📍 ${a.loc}</span>
-          <span class="meta">👆 ${a.method}</span>
-          <span class="meta">💫 ${a.effect}</span>
-        </div>
-      `).join("")}
-    </div>
-    <div class="result-section">
-      <h3>⚠️ 禁忌症（請務必詳讀）</h3>
-      <div class="warning-box">
-        <ul>${item.contraindications.map(s => `<li>🚫 ${s}</li>`).join("")}</ul>
-      </div>
-    </div>
-    <div class="result-section">
-      <h3>🛡️ 安全提醒</h3>
-      ${li(item.safetyTips)}
-    </div>
-    <div class="result-section">
-      <h3>✅ 生活提醒與注意事項</h3>
-      <div class="lifestyle-grid">
-        <div class="lifestyle-do">
-          <h4>✅ 建議</h4>
-          <ul>${item.lifestyle_do.map(t => `<li>${t}</li>`).join("")}</ul>
-        </div>
-        <div class="lifestyle-dont">
-          <h4>❌ 避免</h4>
-          <ul>${item.lifestyle_dont.map(t => `<li>${t}</li>`).join("")}</ul>
-        </div>
-      </div>
-    </div>
-    <div class="result-section">
-      <h3>🏥 何時需要看醫師</h3>
-      <div class="see-doctor">
-        <ul>${item.see_doctor.map(s => `<li>${s}</li>`).join("")}</ul>
-      </div>
-    </div>
-    <div class="disclaimer">
-      <strong>⚕️ 免責聲明</strong>：以上建議僅供保健參考，不構成醫療診斷或處方。電療與熱敷屬侵入性較低之物理療法，仍請在專業人員指導下使用，如有持續不適，請務必諮詢合格醫療專業人員。
     </div>
   `;
 
